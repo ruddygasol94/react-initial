@@ -38,6 +38,7 @@ function App() {
         <td>{oUser.age}</td>
         <td>
           <button>Editar</button>
+          <button onClick={() => handleDelete(oUser.id)}>Quitar</button>
         </td>
       </tr>
     ));
@@ -51,13 +52,16 @@ function App() {
     const maxId1 = aTemp.reduce((anterior, actual) => {
       return anterior.id > actual.id ? anterior.id : actual.id;
     });
-    console.log(maxId1);
+    // console.log(maxId1);
 
-    const maxId2 = aTemp.sort((a, b) => b.id - a.id)[0].id;
-    console.log(maxId2);
+    // Usando sort
+    // NOTA: Usar asi el sort cambia el orden de los elementos
+    // const maxId2 = aTemp.sort((a, b) => b.id - a.id)[0].id;
+    // console.log(maxId2);
 
-    const maxId3 = Math.max(...aTemp.map(user => user.id));
-    console.log(maxId3);
+    // Usando max
+    //const maxId3 = Math.max(...aTemp.map(user => user.id));
+    // console.log(maxId3);
 
     aTemp.push({
       ...form,
@@ -65,6 +69,11 @@ function App() {
     });
 
     setUsers(aTemp);
+  };
+
+  const handleDelete = id => {
+    const aTemp = [...aUsers];
+    setUsers(aTemp.filter(obj => obj.id !== id));
   };
 
   const handleInputChange = event => {
