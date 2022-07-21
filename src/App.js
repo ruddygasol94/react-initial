@@ -26,7 +26,7 @@ function App() {
   const [form, setForm] = useState({
     name: '',
     lastName: '',
-    age: null
+    age: null,
   });
   const [screen] = useState('Inicio');
 
@@ -38,20 +38,42 @@ function App() {
         <td>{oUser.age}</td>
         <td>
           <button>Editar</button>
+          <button onClick={() => handleDelete(oUser.id)}>Quitar</button>
         </td>
       </tr>
     ));
 
   const handleAdd = () => {
     let aTemp = [...aUsers];
-    // TODO - get max id value
+
+    // Investigando primero encontre esta forma usando 'reduce' pero quise
+    // hacerlo tambien con 'sort' y con 'map' para experimentar más
+    // segun yo las tres son soluciones validas al problema
+    const maxId1 = aTemp.reduce((anterior, actual) => {
+      return anterior.id > actual.id ? anterior.id : actual.id;
+    });
+    // console.log(maxId1);
+
+    // Usando sort
+    // NOTA: Usar asi el sort cambia el orden de los elementos
+    // const maxId2 = aTemp.sort((a, b) => b.id - a.id)[0].id;
+    // console.log(maxId2);
+
+    // Usando max
+    //const maxId3 = Math.max(...aTemp.map(user => user.id));
+    // console.log(maxId3);
 
     aTemp.push({
       ...form,
-      id: aTemp.length + 1,
+      id: maxId1 + 1,
     });
-    
+
     setUsers(aTemp);
+  };
+
+  const handleDelete = id => {
+    const aTemp = [...aUsers];
+    setUsers(aTemp.filter(obj => obj.id !== id));
   };
 
   const handleInputChange = event => {
@@ -79,9 +101,7 @@ function App() {
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody>
-                {renderUsers()}
-              </tbody>
+              <tbody>{renderUsers()}</tbody>
             </table>
           </div>
           <div>
@@ -102,7 +122,9 @@ function App() {
                 <label>Edad</label>
                 <input name="age" onChange={handleInputChange} type="text" />
               </div>
-              <button onClick={handleAdd} type="button">Agregar</button>
+              <button onClick={handleAdd} type="button">
+                Agregar
+              </button>
             </form>
           </div>
         </div>
