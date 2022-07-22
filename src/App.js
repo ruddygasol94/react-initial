@@ -56,6 +56,19 @@ function App() {
       return anterior.id > actual.id ? anterior.id : actual.id;
     });
 
+    // Investigando primero encontre esta forma usando 'reduce' pero quise
+    // hacerlo tambien con 'sort' y con 'map' para experimentar más
+    // segun yo las tres son soluciones validas al problema
+
+    // Usando sort
+    // NOTA: Usar asi el sort cambia el orden de los elementos
+    // const maxId2 = aTemp.sort((a, b) => b.id - a.id)[0].id;
+    // console.log(maxId2);
+
+    // Usando max
+    //const maxId3 = Math.max(...aTemp.map(user => user.id));
+    // console.log(maxId3);
+
     aTemp.push({
       ...form,
       id: maxId1 + 1,
