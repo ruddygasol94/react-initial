@@ -52,22 +52,9 @@ function App() {
   const handleAdd = () => {
     let aTemp = [...aUsers];
 
-    // Investigando primero encontre esta forma usando 'reduce' pero quise
-    // hacerlo tambien con 'sort' y con 'map' para experimentar más
-    // segun yo las tres son soluciones validas al problema
     const maxId1 = aTemp.reduce((anterior, actual) => {
       return anterior.id > actual.id ? anterior.id : actual.id;
     });
-    // console.log(maxId1);
-
-    // Usando sort
-    // NOTA: Usar asi el sort cambia el orden de los elementos
-    // const maxId2 = aTemp.sort((a, b) => b.id - a.id)[0].id;
-    // console.log(maxId2);
-
-    // Usando max
-    //const maxId3 = Math.max(...aTemp.map(user => user.id));
-    // console.log(maxId3);
 
     aTemp.push({
       ...form,
@@ -75,15 +62,20 @@ function App() {
     });
 
     setUsers(aTemp);
+    resetForm();
   };
 
   const handleDelete = id => {
     setUsers(aUsers.filter(obj => obj.id !== id));
   };
 
-  const handleEdit = id => {
-    // TODO Validar que haya datos en el formulario, borrar datos del formulario
+  const resetForm = () => {
+    // Creo que no es la forma ideal pero de momento es lo que se me ocurre
+    document.getElementById('formulario').reset();
+  };
 
+  const handleEdit = id => {
+    // TODO Validar que haya datos en el formulario
     const index = aUsers.findIndex(obj => obj.id === id);
     const aTemp = [...aUsers];
     aTemp[index] = {
@@ -91,6 +83,7 @@ function App() {
       ...form,
     };
     setUsers(aTemp);
+    resetForm();
   };
 
   const handleInputChange = event => {
@@ -122,7 +115,7 @@ function App() {
             </table>
           </div>
           <div>
-            <form>
+            <form id="formulario">
               <div className="margin-5">
                 <label>Nombre</label>
                 <input name="name" onChange={handleInputChange} type="text" />
