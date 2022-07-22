@@ -98,6 +98,7 @@ function App() {
     const aTemp = [...aUsers];
     let edit = { ...aTemp[index] };
 
+    // Solo remplazar los valores que tengan algo en el form
     const keys = Object.keys(form);
     keys.forEach(key => {
       if (form[key] !== '' && form[key] !== null) {
