@@ -85,16 +85,29 @@ function App() {
   const resetForm = () => {
     // Creo que no es la forma ideal pero de momento es lo que se me ocurre
     document.getElementById('formulario').reset();
+    setForm({
+      name: '',
+      lastName: '',
+      age: null,
+    });
   };
 
   const handleEdit = id => {
     // TODO Validar que haya datos en el formulario
     const index = aUsers.findIndex(obj => obj.id === id);
     const aTemp = [...aUsers];
+    let edit = { ...aTemp[index] };
+
+    const keys = Object.keys(form);
+    keys.forEach(key => {
+      if (form[key] !== '' && form[key] !== null) {
+        edit[key] = form[key];
+      }
+    });
     aTemp[index] = {
-      id,
-      ...form,
+      ...edit,
     };
+
     setUsers(aTemp);
     resetForm();
   };
