@@ -15,6 +15,12 @@ const initialUsers = [
     lastName: 'González',
     age: 20,
   },
+  {
+    id: 3,
+    name: 'Jhon',
+    lastName: 'Doe',
+    age: 20,
+  },
 ];
 
 function App() {
@@ -37,7 +43,7 @@ function App() {
         <td>{oUser.lastName}</td>
         <td>{oUser.age}</td>
         <td>
-          <button>Editar</button>
+          <button onClick={() => handleEdit(oUser.id)}>Editar</button>
           <button onClick={() => handleDelete(oUser.id)}>Quitar</button>
         </td>
       </tr>
@@ -72,8 +78,19 @@ function App() {
   };
 
   const handleDelete = id => {
+    setUsers(aUsers.filter(obj => obj.id !== id));
+  };
+
+  const handleEdit = id => {
+    // TODO Validar que haya datos en el formulario, borrar datos del formulario
+
+    const index = aUsers.findIndex(obj => obj.id === id);
     const aTemp = [...aUsers];
-    setUsers(aTemp.filter(obj => obj.id !== id));
+    aTemp[index] = {
+      id,
+      ...form,
+    };
+    setUsers(aTemp);
   };
 
   const handleInputChange = event => {
