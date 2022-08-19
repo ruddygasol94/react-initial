@@ -6,20 +6,20 @@ const { Content, Header, Sider } = Layout;
 const initialUsers = [
   {
     id: 1,
-    name: "Ruddy",
-    lastName: "García",
+    name: 'Ruddy',
+    lastName: 'García',
     age: 27,
   },
   {
     id: 2,
-    name: "Alex",
-    lastName: "González",
+    name: 'Alex',
+    lastName: 'González',
     age: 20,
   },
   {
     id: 3,
-    name: "Jhon",
-    lastName: "Doe",
+    name: 'Jhon',
+    lastName: 'Doe',
     age: 20,
   },
 ];
@@ -65,51 +65,48 @@ function App() {
           <Button onClick={() => handleDelete(sId)}>Eliminar</Button>
         </div>
       ),
-    }
+    },
   ];
 
-  const handleDelete = (id) => {
-    setUsers(aUsers.filter((obj) => obj.id !== id));
+  const handleDelete = id => {
+    setUsers(aUsers.filter(obj => obj.id !== id));
   };
 
-  const handleEdit = (id) => {
-    // TODO ajustar edición con formulario en modal
-    const index = aUsers.findIndex((obj) => obj.id === id);
-    const aTemp = [...aUsers];
-    let edit = { ...aTemp[index] };
+  const handleEdit = id => {
+    setModalVisible(true);
 
-    // Solo remplazar los valores que tengan algo en el form
-    const keys = Object.keys(form);
-    keys.forEach((key) => {
-      if (form[key] !== '' && form[key] !== null) {
-        edit[key] = form[key];
-      }
-    });
-    aTemp[index] = {
-      ...edit,
-    };
-
-    setUsers(aTemp);
-    formRef.resetFields();
+    const index = aUsers.findIndex(obj => obj.id === id);
+    let edit = { ...aUsers[index] };
+    formRef.setFieldsValue(edit);
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
+    formRef.resetFields();
+    setForm({
+      name: '',
+      lastName: '',
+      age: null,
+    });
   };
 
   const onFinish = values => {
     let aTemp = [...aUsers];
 
-    // validar si el registro tiene id
-    // En caso de que tenga, buscar su posición en aTemp y reemplazar valor
-    // Caso contrario, lógica actual para inserta
-    const maxId1 = aTemp.reduce((anterior, actual) => {
-      return anterior.id > actual.id ? anterior.id : actual.id;
-    });
-    aTemp.push({
-      ...values,
-      id: maxId1 + 1,
-    });
+    if (values.id === undefined) {
+      // Añadir
+      const maxId = aTemp.reduce((anterior, actual) => {
+        return anterior.id > actual.id ? anterior.id : actual.id;
+      });
+      aTemp.push({
+        ...values,
+        id: maxId + 1,
+      });
+    } else {
+      // Editar
+      const idx = aTemp.findIndex(obj => obj.id === values.id);
+      aTemp[idx] = values;
+    }
 
     setUsers(aTemp);
     setModalVisible(false);
@@ -121,9 +118,8 @@ function App() {
         <div className="logo" />
       </Header>
       <Layout>
-        <Sider width={200} className="site-layout-background">
-        </Sider>
-        <Layout style={{ padding: "0 24px 24px" }}>
+        <Sider width={200} className="site-layout-background"></Sider>
+        <Layout style={{ padding: '0 24px 24px' }}>
           <Content
             className="site-layout-background"
             style={{
@@ -147,24 +143,34 @@ function App() {
                 autoComplete="off"
                 form={formRef}
               >
+                <Form.Item name="id" hidden="true">
+                  <Input type="hidden" />
+                </Form.Item>
                 <Form.Item
                   label="Nombre"
                   name="name"
-                  rules={[{ required: true, message: 'Please input your username!' }]}
+                  rules={[
+                    { required: true, message: 'Please input your username!' },
+                  ]}
                 >
                   <Input type="text" />
                 </Form.Item>
                 <Form.Item
                   label="Apellido"
                   name="lastName"
-                  rules={[{ required: true, message: 'Please input your last name!' }]}
+                  rules={[
+                    { required: true, message: 'Please input your last name!' },
+                  ]}
+                  placeholder="Escribe tu nombre"
                 >
                   <Input type="text" placeholder="Escribe tu apellido" />
                 </Form.Item>
                 <Form.Item
                   label="Edad"
                   name="age"
-                  rules={[{ required: true, message: 'Please input your last name!' }]}
+                  rules={[
+                    { required: true, message: 'Please input your last name!' },
+                  ]}
                   placeholder="Escribe tu apellido"
                 >
                   <Input type="number" min={18} max={99} />
@@ -174,7 +180,11 @@ function App() {
             <div>
               <Button onClick={() => setModalVisible(true)}>Nuevo</Button>
             </div>
-            <Table dataSource={aUsers} columns={aColumns} rowKey={oItem => oItem.id} />
+            <Table
+              dataSource={aUsers}
+              columns={aColumns}
+              rowKey={oItem => oItem.id}
+            />
           </Content>
         </Layout>
       </Layout>
